@@ -9,8 +9,8 @@ const loadUser = function (req, res) {
   }
 };
 
-const sendToLogin = function (req, res) {
-  req.url = '/login';
+const sendToHome = function (req, res) {
+  res.redirect('/home');
 };
 
 const loginUserSendToHome = function (req, res) {
@@ -19,7 +19,7 @@ const loginUserSendToHome = function (req, res) {
 };
 
 const logoutUserSendToLogin = function (req, res) {
-  if (req.url == '/home' && !req.user) {
+  if ('/home'==req.url && !req.user) {
     res.redirect('/login');
   }
 };
@@ -114,7 +114,7 @@ const ignorePage = function (req, res) {
 };
 
 exports.loadUser = loadUser;
-exports.sendToLogin = sendToLogin;
+exports.sendToHome = sendToHome;
 exports.loginUserSendToHome = loginUserSendToHome;
 exports.logoutUserSendToLogin = logoutUserSendToLogin;
 exports.getLogin = getLogin;

@@ -23,4 +23,30 @@ describe('appTest',()=>{
       })
     })
   })
+  it('serves the login page',done=>{
+    request(app,{method:'GET',url:'/login'},res=>{
+      th.statusIsOk(res);
+      th.body_contains(res,'Name:');
+      th.body_does_not_contain(res,'Invalid user or password');
+      th.should_not_have_cookie(res,'message');
+      done();
+    })
+  })
+  it('serves the login page with message for a failed login',done=>{
+    request(app,{method:'GET',url:'/login',headers:{'cookie':'error=Invalid user or password'}},res=>{
+      th.statusIsOk(res);
+      th.body_contains(res,'Name:');
+      th.body_contains(res,'Invalid user or password');
+      th.should_not_have_cookie(res,'message');
+      done();
+    })
+  })
+  describe('GET /home',()=>{
+    it('should redirect to login when user is not logged in',done=>{
+      request(app,{method:'GET',url:'/home'},(res)=>{
+        th.should_be_redirected_to(res,'/login')
+        done();
+      })
+    })
+  })
 })

@@ -7,7 +7,7 @@ app.use(logRequest);
 app.use(lib.loadUser);
 app.use(lib.loginUserSendToHome);
 app.use(lib.logoutUserSendToLogin);
-app.get('/',lib.sendToLogin);
+app.get('/',lib.sendToHome);
 app.get('/fevicon.ico',lib.ignorePage);
 app.get('/login', lib.getLogin);
 app.post('/login', lib.postLogin);
