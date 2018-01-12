@@ -66,7 +66,7 @@ const getLogout = function (req, res) {
   res.setHeader('Set-Cookie', [`sessionId=0; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`,
     `userName=; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`
   ]);
-  res.redirect('/')
+  res.redirect('/login')
 };
 
 
