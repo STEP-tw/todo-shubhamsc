@@ -1,4 +1,6 @@
 const fs = require('fs');
+const todoHandler = require('../todoList/todoHandler.js');
+todoHandler.readTodo();
 let registeredUsers = [{userName: 'shubham',password: 1234}];
 
 const loadUser = function (req, res) {
@@ -10,16 +12,16 @@ const loadUser = function (req, res) {
 };
 
 const sendToHome = function (req, res) {
-  res.url == '/home';
+  req.url == '/home';
 };
 
 const loginUserSendToHome = function (req, res) {
-  if ('/login'==req.url && req.user)
+  if (['/login','/'].includes(req.url) && req.user)
     res.redirect('/home');
 };
 
 const logoutUserSendToLogin = function (req, res) {
-  if ('/home'==req.url && !req.user) {
+  if (['/','/home'].includes(req.url) && !req.user) {
     res.redirect('/login');
   }
 };
@@ -27,7 +29,7 @@ const logoutUserSendToLogin = function (req, res) {
 const getLogin = function (req, res) {
   let error = req.cookie.error || '';
   if (error)
-    res.setHeader('Set-Cookie', `error; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`)
+    res.setHeader('Set-Cookie', `error=; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`)
   fs.readFile('./public/login.html', 'utf8', (err, data) => {
     if (err){
       console.log(err);
@@ -118,11 +120,11 @@ const ignorePage = function (req, res) {
 const createTodo = function(req,res){
   let todoList = req.body;
   console.log(todoList);
-  
-  // todoList.name = req.cookie.userName;
-  // todoHandler.writeTodo(todoList);
-  res.redirect('/addTodoItems');  
+  todoList.name = req.cookie.userName;
+  todoHandler.writeTodo(todoList);
+  res.redirect('/todoItems');  
 };
+
 
 exports.loadUser = loadUser;
 exports.sendToHome = sendToHome;

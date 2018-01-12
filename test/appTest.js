@@ -27,7 +27,7 @@ describe('appTest',()=>{
         th.statusIsOk(res);
         th.body_contains(res,'Name:');
         th.body_does_not_contain(res,'Invalid user or password');
-        th.should_not_have_cookie(res,'error');
+        th.should_not_have_cookie(res,'error=');
         done();
       })
     })
@@ -36,7 +36,7 @@ describe('appTest',()=>{
         th.statusIsOk(res);
         th.body_contains(res,'Name:');
         th.body_contains(res,'Invalid user or password');
-        th.should_not_have_cookie(res,'error');
+        th.should_not_have_cookie(res,'error=');
         done();
       })
     })
@@ -49,7 +49,7 @@ describe('appTest',()=>{
       })
     })
     it('redirects to login with message for invalid user',done=>{
-      request(app,{method:'POST',url:'/login',body:'username=badUser'},res=>{
+      request(app,{method:'POST',url:'/login',body:'userName=badUser'},res=>{
         th.should_be_redirected_to(res,'/login');
         th.should_have_expiring_cookie(res,'error','Invalid user or password');
         done();
@@ -77,6 +77,21 @@ describe('appTest',()=>{
       request(app,{method:'GET',url:'/createTodo'},res=>{
         th.statusIsOk(res);
         th.body_contains(res,'Create TODO');
+        done();
+      })
+    })
+    it('should redirect to add item for Todo',done=>{
+      request(app,{method:'POST',url:'/create'},res=>{
+        th.should_be_redirected_to(res,'/todoItems')        
+        done();
+      })
+    })
+  })
+  describe('GET /todoItems',()=>{
+    it('should show todo items',done=>{    
+      request(app,{method:'GET',url:'/todoItems'},res=>{
+        th.statusIsOk(res);
+        th.body_contains(res,'Add Items');       
         done();
       })
     })

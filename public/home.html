@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <title>home</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/home.js"></script>
 </head>
-<body>
+<body onload="showTodo()">
     <div class="header">
         <p>TODO</p>
       </div>
@@ -13,9 +14,9 @@
   <a href="createTodo">create a new TODO</a>
   <div>
     <h3>TODO LIST</h3>
-    <ol>
+    <div id ="todoList">
       TODO_LIST
-    </ol>
+    </div>
   </div>
   <a href="logout">Logout</a>
 </body>
