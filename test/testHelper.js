@@ -29,7 +29,7 @@ const should_have_cookie = (res,name,value)=> {
 const should_have_expiring_cookie = (res,name,value)=> {
   console.log(res.headers);
   let cookieText = res.headers['Set-Cookie'];
-  assert.include(cookieText,`${name}=${value}; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`);
+  assert.include(cookieText,`${name}=${value}`);
 };
 
 const should_be_redirected_to = (res,location)=>{

@@ -10,7 +10,7 @@ const loadUser = function (req, res) {
 };
 
 const sendToHome = function (req, res) {
-  res.redirect('/home');
+  res.url == '/home';
 };
 
 const loginUserSendToHome = function (req, res) {
@@ -27,7 +27,7 @@ const logoutUserSendToLogin = function (req, res) {
 const getLogin = function (req, res) {
   let error = req.cookie.error || '';
   if (error)
-    res.setHeader('Set-Cookie', `error=; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`)
+    res.setHeader('Set-Cookie', `error; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`)
   fs.readFile('./public/login.html', 'utf8', (err, data) => {
     if (err){
       console.log(err);
@@ -105,12 +105,23 @@ const displayPage = function (req, res) {
       res.pageNotFound();
       return;
     }
+    let userName = req.cookie.userName||'';
+    data = data.toString().replace(/USER_NAME/,userName);
     showContents(req, res, data);
   });
 };
 
 const ignorePage = function (req, res) {
   res.end();
+};
+
+const createTodo = function(req,res){
+  let todoList = req.body;
+  console.log(todoList);
+  
+  // todoList.name = req.cookie.userName;
+  // todoHandler.writeTodo(todoList);
+  res.redirect('/addTodoItems');  
 };
 
 exports.loadUser = loadUser;
@@ -126,3 +137,4 @@ exports.getTypes = getTypes;
 exports.showContents = showContents;
 exports.displayPage = displayPage;
 exports.ignorePage = ignorePage;
+exports.createTodo = createTodo;

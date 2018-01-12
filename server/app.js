@@ -12,6 +12,7 @@ app.get('/fevicon.ico',lib.ignorePage);
 app.get('/login', lib.getLogin);
 app.post('/login', lib.postLogin);
 app.get('/logout', lib.getLogout);
+app.post('/create',lib.createTodo);
 app.postServe(lib.displayPage);
 
 module.exports = app;
