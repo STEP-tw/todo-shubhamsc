@@ -1,7 +1,7 @@
 const getTodo = function(){
   return data.map(function(todo){
-    return `<p>${todo.title}</p><p>${todo.desc}</p><p>${todo.items}</p>`;
-  }).join('<br>');
+    return `<b>${todo.title}</b>${todo.desc}<li>${todo.items}</li>`;
+  }).join('');
 };
 
 const showTodo = function(){

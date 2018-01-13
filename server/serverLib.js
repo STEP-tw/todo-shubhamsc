@@ -119,8 +119,7 @@ const ignorePage = function (req, res) {
 
 const createTodo = function(req,res){
   let todoList = req.body;
-  console.log(todoList);
-  todoList.name = req.cookie.userName;
+  todoList.userName = req.cookie.userName;
   todoHandler.writeTodo(todoList);
   res.redirect('/todoItems');  
 };
