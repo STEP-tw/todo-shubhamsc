@@ -124,6 +124,11 @@ const createTodo = function(req,res){
   res.redirect('/todoItems');  
 };
 
+const viewTodo = function(req,res){
+  res.write('Not yet implement');
+  res.end();
+};
+
 
 exports.loadUser = loadUser;
 exports.sendToHome = sendToHome;
@@ -139,3 +144,4 @@ exports.showContents = showContents;
 exports.displayPage = displayPage;
 exports.ignorePage = ignorePage;
 exports.createTodo = createTodo;
+exports.viewTodo = viewTodo;

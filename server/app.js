@@ -1,4 +1,4 @@
-const lib = require('./serverLib.js');
+const lib = require('./appLib.js');
 const webApp = require('./webApp.js');
 const logRequest = require('./logRequest.js').logRequest;
 let app = webApp.create();
@@ -13,6 +13,7 @@ app.get('/login', lib.getLogin);
 app.post('/login', lib.postLogin);
 app.get('/logout', lib.getLogout);
 app.post('/create',lib.createTodo);
+app.get('/view',lib.viewTodo);
 app.postServe(lib.displayPage);
 
 module.exports = app;

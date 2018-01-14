@@ -1,7 +1,8 @@
 const getTodo = function(){
-  return data.map(function(todo){
-    return `<b>${todo.title}</b>${todo.desc}<li>${todo.items}</li>`;
-  }).join('');
+  let titles = Object.keys(data.todo);
+  return titles.map(function(title){
+    return `<a href="view" id="${title}">${title}</a>`
+  }).join('<br>');
 };
 
 const showTodo = function(){
