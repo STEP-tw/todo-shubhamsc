@@ -11,6 +11,9 @@ class TodoList {
   getTodoList(){
     return this.todoList;
   }
+  addPrevTodoList(todoList){
+    this.todoList = todoList;
+  }
 }
 
 module.exports = TodoList;

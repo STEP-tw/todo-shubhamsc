@@ -1,7 +1,7 @@
 const fs = require('fs');
 const todoHandler = require('../todoList/todoHandler.js');
 todoHandler.readTodo();
-let registeredUsers = [{userName: 'shubham',password: 1234}];
+let registeredUsers = [{userName: 'shubham',password: 1234},{userName:"singh",password:"123"}];
 
 const loadUser = function (req, res) {
   let sessionId = req.cookie.sessionId;

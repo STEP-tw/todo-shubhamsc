@@ -2,9 +2,7 @@ const fs = require('fs');
 const TodoList = require('./todoList.js');
 const Items = require('./items.js');
 const UsersTodo = require('./usersTodo.js');
-
 let usersTodo = new UsersTodo()
-let todoData = usersTodo.getUsersTodo();
 
 const readTodo = function(){
   fs.readFile('./data/todoList.json','utf8',(err,data)=>{
@@ -14,7 +12,7 @@ const readTodo = function(){
     } 
     usersTodo.readFromFile(JSON.parse(data));
   })
-}
+};
 
 const getTitle = function(todo){
   return todo.title;
@@ -28,35 +26,59 @@ const getUserName = function(todo){
   return todo.userName;
 }
 
-const getItems = function(todo){
+const getItems = function(todoDetails){
   let items = new Items();
-  items.addItems(todo.items);
+  todoItems = todoDetails.items || [];
+  todoItems.forEach(function(item){
+    items.addItems(item);
+  })
   return items.getItems();
-}
+};
 
-const getTodoInfo = function(title,todoDetails){
+const getUserTodoList = function(todoDetails,prevTodoList){
+  let title = getTitle(todoDetails);
+  let desc = getDesc(todoDetails);
+  let items = getItems(todoDetails);  
   let todoList = new TodoList();
-  let desc = getDesc(todoDetails)
-  let items = getItems(todoDetails);
+  todoList.addPrevTodoList(prevTodoList);
   todoList.createTodoList(title,desc,items);
   return todoList.getTodoList();
-}
+};
 
-const getUserTodo = function(userName,title,todoInfo){
-  let todo = {};
-  todo[title]=todoInfo;
-  usersTodo.addUsersTodo(userName,todo)
+const getUserData = function(todoDetails){
+  let userName = todoDetails.userName;
+  let todoData = usersTodo.getUsersTodo();    
+  return todoData[userName];
+};
+
+const getUpdatedDataBase = function(todoDetails){
+  let user = getUserName(todoDetails);
+  let title = getTitle(todoDetails);
+  let todoData = usersTodo.getUsersTodo();
+  let userData = todoData[user] || {};
+  let prevTodo = userData.todo || {};
+  let todo = getUserTodoList(todoDetails,prevTodo);
+  usersTodo.addUsersTodo(user,todo);
   return usersTodo.getUsersTodo();
-}
+};
 
-const writeTodo = function(todoDetails){
-  let title = getTitle(todoDetails);  
-  let userName = getUserName(todoDetails);
-  let todoInfo = getTodoInfo(title,todoDetails);
-  let userTodo = getUserTodo(userName,title,todoInfo);
-  fs.writeFile('data/todoList.json',JSON.stringify(userTodo,null,2),(err)=>{
+const writeInDataBase = function(data){  
+  fs.writeFile('data/todoList.json',JSON.stringify(data,null,2),(err)=>{
     if(err) console.log(err);
   });
+};
+
+const writeInUserDataFile = function(userData){
+  fs.writeFile('public/js/data.js',`var data = ${JSON.stringify(userData)}`,(err)=>{
+    if(err) console.log(err);
+  });
+};
+
+const writeTodo = function(todoDetails){
+  let data = getUpdatedDataBase(todoDetails);
+  let userData = getUserData(todoDetails);
+  writeInDataBase(data);
+  writeInUserDataFile(userData);
 };
 
 exports.readTodo = readTodo;
