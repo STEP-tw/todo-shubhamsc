@@ -21,7 +21,7 @@ const loginUserSendToHome = function (req, res) {
 };
 
 const logoutUserSendToLogin = function (req, res) {
-  if (['/','/home'].includes(req.url) && !req.user) {
+  if (['/','/home','/todoItems','/createTodo'].includes(req.url) && !req.user) {
     res.redirect('/login');
   }
 };
@@ -61,6 +61,7 @@ const postLogin = function (req, res) {
   let sessionId = new Date().getTime();
   res.setHeader('Set-Cookie', [`sessionId=${sessionId}`, `userName=${user.userName}`]);
   user.sessionId = sessionId;
+  todoHandler.writeuserData({userName:user.userName});  
   res.redirect('/home');
 };
 
@@ -96,12 +97,7 @@ const showContents = function (req, res, data) {
   res.end();
 };
 
-const displayPage = function (req, res) {
-  if (req.url == '/login') return;
-  let extn = req.url.split('.').pop();
-  if (extn == req.url) {
-    req.url = `${req.url}.html`;
-  }
+const readFileContents = function(req,res){
   fs.readFile(`./public${req.url}`, (err, data) => {
     if (err) {
       res.pageNotFound();
@@ -111,6 +107,19 @@ const displayPage = function (req, res) {
     data = data.toString().replace(/USER_NAME/,userName);
     showContents(req, res, data);
   });
+}
+
+const displayPage = function (req, res) {
+  if (req.url == '/login') return;
+  let extn = req.url.split('.').pop();
+  if(extn=='html'){
+    res.pageNotFound();
+    return;
+  }
+  if (extn == req.url) {
+    req.url = `${req.url}.html`;
+  }
+  readFileContents(req,res);
 };
 
 const ignorePage = function (req, res) {
@@ -129,6 +138,11 @@ const viewTodo = function(req,res){
   res.end();
 };
 
+const getItems = function(req,res){
+  fs.readFile('./public/todoItems.html','utf-8',(err,data)=>{
+    
+  })
+};
 
 exports.loadUser = loadUser;
 exports.sendToHome = sendToHome;
@@ -145,3 +159,4 @@ exports.displayPage = displayPage;
 exports.ignorePage = ignorePage;
 exports.createTodo = createTodo;
 exports.viewTodo = viewTodo;
+exports.getItems = getItems;

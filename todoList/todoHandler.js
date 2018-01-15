@@ -81,5 +81,13 @@ const writeTodo = function(todoDetails){
   writeInUserDataFile(userData);
 };
 
+const writeuserData = function(userDetails){
+  let userData = getUserData(userDetails);
+  fs.writeFile('public/js/data.js',`var data = ${JSON.stringify(userData)}`,(err)=>{
+    if(err) console.log(err);
+  });
+}
+
 exports.readTodo = readTodo;
 exports.writeTodo = writeTodo;
+exports.writeuserData = writeuserData;
