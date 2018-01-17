@@ -11,17 +11,22 @@ const loadUser = function (req, res) {
   }
 };
 
-const sendToHome = function (req, res) {
-  req.url == '/home';
+const checkForAlreadyLoggedIn = function (req, res) {
+  if(req.url == '/' && req.user){
+    res.redirect('/home');
+  }
+  if(req.url == '/' && !req.user)
+  req.url = '/login';
 };
 
 const loginUserSendToHome = function (req, res) {
-  if (['/login','/'].includes(req.url) && req.user)
+  if (req.url=='/login' && req.user){
     res.redirect('/home');
+  }
 };
 
 const logoutUserSendToLogin = function (req, res) {
-  if (['/','/home','/todoItems','/createTodo'].includes(req.url) && !req.user) {
+  if (['/home','/items','/createTodo'].includes(req.url) && !req.user) {
     res.redirect('/login');
   }
 };
@@ -36,8 +41,8 @@ const getLogin = function (req, res) {
       res.pageNotFound();
       return;
     } 
-    data = data.replace(/LOGIN_ERROR/, error);
-    showContents(req, res, data);
+    let loginData = data.replace(/LOGIN_ERROR/, error);
+    showContents(req, res, loginData);
   });
 };
 
@@ -110,7 +115,8 @@ const readFileContents = function(req,res){
 }
 
 const displayPage = function (req, res) {
-  if (req.url == '/login') return;
+  if(req.url=='/login') return;
+  if(req.url=='/items') return;
   let extn = req.url.split('.').pop();
   if(extn=='html'){
     res.pageNotFound();
@@ -127,10 +133,11 @@ const ignorePage = function (req, res) {
 };
 
 const createTodo = function(req,res){
-  let todoList = req.body;
-  todoList.userName = req.cookie.userName;
-  todoHandler.writeTodo(todoList);
-  res.redirect('/todoItems');  
+  let todo = req.body;
+  todo.userName = req.cookie.userName;
+  todoHandler.writeTodo(todo);
+  res.setHeader('Set-Cookie', [`title=${todo.title}`, `desc=${todo.desc}`])
+  res.redirect('/items');  
 };
 
 const viewTodo = function(req,res){
@@ -139,24 +146,37 @@ const viewTodo = function(req,res){
 };
 
 const getItems = function(req,res){
+  let title = req.cookie.title;
+  let desc = req.cookie.desc;
+  let userName = req.cookie.userName;  
   fs.readFile('./public/todoItems.html','utf-8',(err,data)=>{
-    
+    let contents = data.replace(/TITLE/,title);
+    contents = contents.replace(/DESC/,desc);
+    contents = contents.toString().replace(/USER_NAME/,userName);    
+    showContents(req,res,contents);
   })
 };
 
+const addItem = function(req,res){
+  let todo = {};
+  todo.userName = req.cookie.userName;
+  todo.title = req.cookie.title;
+  todo.desc = req.cookie.desc;
+  todo.item = req.body.item;
+  todoHandler.writeTodo(todo);  
+  res.end();
+}
+
 exports.loadUser = loadUser;
-exports.sendToHome = sendToHome;
+exports.checkForAlreadyLoggedIn = checkForAlreadyLoggedIn;
 exports.loginUserSendToHome = loginUserSendToHome;
 exports.logoutUserSendToLogin = logoutUserSendToLogin;
 exports.getLogin = getLogin;
-exports.getValidUser = getValidUser;
-exports.showLoginFailed = showLoginFailed;
 exports.postLogin = postLogin;
 exports.getLogout = getLogout;
-exports.getTypes = getTypes;
-exports.showContents = showContents;
 exports.displayPage = displayPage;
 exports.ignorePage = ignorePage;
 exports.createTodo = createTodo;
 exports.viewTodo = viewTodo;
 exports.getItems = getItems;
+exports.addItem = addItem;

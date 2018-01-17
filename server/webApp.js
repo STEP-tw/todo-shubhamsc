@@ -74,8 +74,9 @@ const main = function (req, res) {
       if (res.finished) return;
       middleware(req, res);
     });
-    if (!(res.finished))    
-    invoke.call(this, req, res);
+    if (!(res.finished)){
+      invoke.call(this, req, res);
+    }  
     this._postProcess.forEach(lastware=>{
       if(res.finished) return;
       lastware(req,res);

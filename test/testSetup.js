@@ -6,6 +6,7 @@ let request = function(app,option,execute){
   req.headers = option.headers || {};
   req.method = option.method;
   req.url = option.url;
+  req.user = option.user || '';
   let res = {
     end:()=>{
       req.finished = true;

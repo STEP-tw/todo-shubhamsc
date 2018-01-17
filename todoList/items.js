@@ -11,6 +11,9 @@ class Items {
   getItems(){
     return this.items;
   }
+  getPrevItems(items){
+    this.items = items;
+  }
 }
 
 module.exports = Items;

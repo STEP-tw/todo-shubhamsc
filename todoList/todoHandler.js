@@ -2,7 +2,7 @@ const fs = require('fs');
 const TodoList = require('./todoList.js');
 const Items = require('./items.js');
 const UsersTodo = require('./usersTodo.js');
-let usersTodo = new UsersTodo()
+let usersTodo = new UsersTodo();
 
 const readTodo = function(){
   fs.readFile('./data/todoList.json','utf8',(err,data)=>{
@@ -26,19 +26,26 @@ const getUserName = function(todo){
   return todo.userName;
 }
 
-const getItems = function(todoDetails){
+const getUpdatedItems = function(todoDetails){
+  let title = getTitle(todoDetails);  
+  let user = getUserName(todoDetails);  
+  let todoInfo = usersTodo.getUsersTodo();
   let items = new Items();
-  todoItems = todoDetails.items || [];
-  todoItems.forEach(function(item){
-    items.addItems(item);
-  })
+  if(todoInfo[user]){
+    let prevTodo = todoInfo[user].todo;
+    if(prevTodo){
+      let prevItems = prevTodo[title].items;
+      items.getPrevItems(prevItems);
+    }
+  }
+  items.addItems(todoDetails.item);
   return items.getItems();
 };
 
 const getUserTodoList = function(todoDetails,prevTodoList){
   let title = getTitle(todoDetails);
   let desc = getDesc(todoDetails);
-  let items = getItems(todoDetails);  
+  let items = getUpdatedItems(todoDetails);  
   let todoList = new TodoList();
   todoList.addPrevTodoList(prevTodoList);
   todoList.createTodoList(title,desc,items);

@@ -1,9 +1,10 @@
 {
-  "name": "nodemon",
+  "name": "todo-shubhamsc",
+  "version":"0.0.1",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "mocha test"
+    "test": "mocha"
   },
   "devDependencies": {
     "chai": "^4.1.2"

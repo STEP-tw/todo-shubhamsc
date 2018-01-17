@@ -1,13 +1,11 @@
-const showItems = function(){
-  let list = document.createElement('li');
-  document.querySelector("#todoItems").appendChild(list).innerText = this.responseText;
-}
-
 const addItems = function(){
+  let list = document.createElement('li');
+  let item = document.getElementById('item').value;
+  document.querySelector("#todoItems").appendChild(list).innerText = item;
+
   let req = new XMLHttpRequest();
-  req.addEventListener('load',showItems);
-  req.open('GET','/items');
-  req.send();
+  req.open('POST','addItem');
+  req.send(`item=${item}`);
 }
 
 const start = function(){
