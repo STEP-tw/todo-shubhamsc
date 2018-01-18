@@ -7,3 +7,4 @@ public/js/data.js
 coverage/
 .nyc_output/
 todoList/foo.js
+public/js/todo.js

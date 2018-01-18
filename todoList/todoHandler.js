@@ -35,10 +35,10 @@ class TodoHandler {
     let desc = this.getDesc(id);
     let items = this.getItems(id);
     let itemList = items.map(item=>{
-      return `  <a href=\"${item}\">${item}</a>`;
-    }).join('<br>');
-    let data = [`Title:\\t<a href=\"${title}\">${title}</a>`,
-    `Description: \\t<a href=\"${desc}\">${desc}</a>`,`Items:<br>${itemList}`];
+      return `<p id=\"${item}\">${item}</p>`;
+    }).join('');
+    let data = [`<p id=\"${title}\">Title: ${title}</p>`,
+    `<p id=\"${desc}\">Description: ${desc}</p>`,`Items:<br>${itemList}`];
     fs.writeFile('./public/js/todo.js',`var todo = \`${data.join('<br>')}\``,(err)=>{
       console.log(err);
     });
