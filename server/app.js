@@ -4,6 +4,8 @@ let app = webApp.create();
 
 const LoggerHandler = require('../handler/logger_handler.js');
 const FileHandler = require('../handler/file_handler.js')
+const PageNotFoundHandler = require('../handler/page_not_found_handler.js')
+
 app.use(new LoggerHandler().getRequestHandler());
 
 
@@ -14,11 +16,11 @@ app.use(lib.logoutUserSendToLogin);
 app.get('/login', lib.getLogin);
 app.post('/login', lib.postLogin);
 app.get('/logout', lib.getLogout);
-app.post('/create',lib.createTodo);
 app.get('/items',lib.getItems);
-app.post('/addItem',lib.addItem);
+app.post('/addTodo',lib.addTodo);
 app.get('/view',lib.viewTodo);
 app.get('/favicon.ico',lib.ignorePage);
 app.postServe(new FileHandler().getRequestHandler());
+// app.postServe(new PageNotFoundHandler().getRequestHandler())
 
 module.exports = app;

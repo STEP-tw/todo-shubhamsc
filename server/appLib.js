@@ -1,8 +1,7 @@
 const fs = require('fs');
-const DataHandler = require('../todoList/dataHandler.js');
 const TodoHandler = require('../todoList/todoHandler.js')
 const writeContents = require('../commonLib/lib.js').writeContents;
-new DataHandler().read();
+
 let registeredUsers = [{userName: 'shubham',password: 1234},{userName:"singh",password:"123"}];
 
 const loadUser = function (req, res) {
@@ -67,8 +66,9 @@ const postLogin = function (req, res) {
   let sessionId = new Date().getTime();
   res.setHeader('Set-Cookie', [`sessionId=${sessionId}`, `userName=${user.userName}`]);
   user.sessionId = sessionId;
-  let todoHandler = new TodoHandler();
-  todoHandler.displayTodoList(user.userName); 
+  todoHandler = new TodoHandler(user.userName);
+  todoHandler.getUserData(); 
+  todoHandler.showUserTodo();
   res.redirect('/home');
 };
 
@@ -83,39 +83,18 @@ const ignorePage = function (req, res) {
   res.end();
 };
 
-const createTodo = function(req,res){
-  let todo = req.body;
-  todo.userName = req.cookie.userName;
-  todoHandler.create(todo);
-  res.setHeader('Set-Cookie', [`title=${todo.title}`, `desc=${todo.desc}`])
-  res.redirect('/items');  
-};
-
 const viewTodo = function(req,res){
   res.write('Not yet implement');
   res.end();
 };
 
-const getItems = function(req,res){
-  let title = req.cookie.title;
-  let desc = req.cookie.desc;
-  let userName = req.cookie.userName;  
-  fs.readFile('./public/todoItems.html','utf-8',(err,data)=>{
-    let contents = data.replace(/TITLE/,title);
-    contents = contents.replace(/DESC/,desc);
-    contents = contents.toString().replace(/USER_NAME/,userName);    
-    writeContents(req,res,contents);
-  })
-};
-
-const addItem = function(req,res){
-  let todo = {};
-  todo.userName = req.cookie.userName;
-  todo.title = req.cookie.title;
-  todo.desc = req.cookie.desc;
-  todo.item = req.body.item;
-  todoHandler.updateItems(todo);  
-  res.end();
+const addTodo = function(req,res){
+  let todo = req.body || {};
+  let user = req.cookie.userName;
+  todoHandler.addNewTodo(todo);
+  todoHandler.showUserTodo();
+  res.redirect('/home');
+  // res.end();
 }
 
 exports.loadUser = loadUser;
@@ -126,7 +105,5 @@ exports.getLogin = getLogin;
 exports.postLogin = postLogin;
 exports.getLogout = getLogout;
 exports.ignorePage = ignorePage;
-exports.createTodo = createTodo;
 exports.viewTodo = viewTodo;
-exports.getItems = getItems;
-exports.addItem = addItem;
+exports.addTodo = addTodo;

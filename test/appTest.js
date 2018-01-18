@@ -5,7 +5,7 @@ let request = require('./testSetup.js');
 let th = require('./testHelper.js');
 
 describe('appTest',()=>{  
-  describe('GET /badFile',()=>{
+  describe.skip('GET /badFile',()=>{
     it('should give page not found Error when user is not logged in',done=>{
       request(app,{method:'GET',url:'/badFile'},res=>{
         assert.equal(res.statusCode,404);
@@ -114,30 +114,9 @@ describe('appTest',()=>{
         done();
       })
     })
-    it('should redirect to add item for Todo',done=>{
-      request(app,{method:'POST',url:'/create'},res=>{
-        th.should_be_redirected_to(res,'/items')        
-        done();
-      })
-    })
     it('should redirect to login if user is not logged in',done=>{
       request(app,{method:'GET',url:'/createTodo'},res=>{
         th.should_be_redirected_to(res,'/login')        
-        done();
-      })
-    })
-  })
-  describe('GET /todoItems',()=>{
-    it('should show todo items when user is looged in',done=>{
-      request(app,{method:'GET',url:'/items',user:'shubham'},res=>{
-        th.statusIsOk(res);
-        th.body_contains(res,'Add Items');       
-        done();
-      })
-    })
-    it('should redirect to login when user is not looged in',done=>{
-      request(app,{method:'GET',url:'/items'},res=>{
-        th.should_be_redirected_to(res,'/login');
         done();
       })
     })

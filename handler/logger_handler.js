@@ -16,7 +16,7 @@ class LoggerHandler extends DefaultHandler {
       `COOKIES: ${getToString(req.cookie)}`,
       `BODY: ${getToString(req.body)}`, ''
     ].join('\n');
-    fs.appendFile('../request.log', log, (err) => {});
+    fs.appendFile('./request.log', log, (err) => {});
   }
 }
 

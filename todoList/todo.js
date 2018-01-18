@@ -1,25 +1,17 @@
+const Items = require('./items.js');
 class Todo {
   constructor(){
     this.todo = {};
   }
-  createTodo(id,title,desc,items,isDone=false){
-    this.todo.id = id;
+  create(title,desc,listOfItem){
     this.todo.title = title;
     this.todo.desc = desc;
-    this.todo.items = items;
-    this.todo.done = isDone;
+    let items = new Items()
+    items.parse(listOfItem);
+    this.todo.items = items.getItems();
   }
   getTodo(){
     return this.todo;
-  }
-  getTitle(){
-    return this.todo.title;
-  }
-  getDesc(){
-    return this.todo.desc;
-  }
-  getItems(){
-    return this.todo.items;
   }
 }
 

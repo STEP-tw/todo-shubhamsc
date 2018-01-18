@@ -4,17 +4,25 @@
   <meta charset="UTF-8">
   <title>create</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/createTodo.js"></script>
 </head>
 <body>
     <div class="header">
         <p><a href="home"><<</a> Create TODO</p>
       </div>
       <p>USER_NAME</p>
-<form action="create" method="post">
-  Title: <input type="text" name="title">
-  description: <input type="textarea" name="desc">
-  <button type="submit">Submit</button>
-</form>
+  Title: <input type="text" id="title" value="">
+  <br><br>
+  description: <textarea type="text" id="desc" value=""></textarea>
+  <div>
+      <ol id = "todoItems">
+        
+      </ol>
+    </div>
+    Add Items: <input type="text" id="item" value="">
+    <button type="submit" id="addItem" >Add</button>
+    <br>
+  <button type="submit" id="submit">Submit</button>
 <a href="logout">Logout</a>
 </body>
 </html>

@@ -1,41 +1,35 @@
-const TodoList = require('./todoList.js');
-const Items = require('./items.js');
-const UsersTodo = require('./usersTodo.js');
-const DataBase = require('./dataHandler.js');
-let database = new DataBase();
-
+const DataHandler = require('../todoList/dataHandler.js');
+const TodoParser = require('../todoList/todoParser.js');
+const fs = require('fs');
 class TodoHandler {
-  constructor(){
-    
+  constructor(user){
+    this.user = user;
+    this.data = {};
+    this.id = 1;
   }
-  create(data){
-    let name = getUserName(data);
-    let title = getTitle(data)
-    let desc = getDesc(data);
-    todoList.createTodoList(title,desc);
+  getUserData(){
+    let database = new DataHandler();
+    database.read();
+    this.data = database.getUserData();
   }
-  displayTodoList(user){
-    let usersTodo = new UsersTodo();
-    let userData = database.getUserData(user);
-    usersTodo.addUsersTodo(user,userData);
-    let todoList = usersTodo.getUserTodoList(user);
-    database.writeTodoList(todoList); 
+  addNewTodo(todoInfo){
+    let todoParser = new TodoParser();
+    todoParser.parse(todoInfo);
+    let todo = todoParser.getParseTodo();
+    this.data[this.id] = todo;
+    this.increaseId();
+  }
+  increaseId(){
+    this.id++;
+  }
+  showUserTodo(){
+    let titles = Object.keys(this.data).map(id=>{
+      return `<a href=\"${id}\">${this.data[id].title}</a>`;
+    }).join('<br>')
+    fs.writeFile('./public/js/data.js',`var data = \`${titles}\``,(err)=>{
+      console.log(err);
+    });
   }
 }
-
-
-const getTitle = function(todo){
-  return todo.title;
-};
-
-const getDesc = function(todo){
-  return todo.desc;
-};
-
-const getUserName = function(todo){
-  return todo.userName;
-}
-
-
 
 module.exports = TodoHandler;

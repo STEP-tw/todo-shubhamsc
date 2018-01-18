@@ -10,7 +10,9 @@ const initialize = function () {
 
 const invoke = function (req, res) {
   let handler = this._appHandlers[req.method][req.url];
-  if (handler) handler(req, res);
+  if (handler) {
+    handler(req, res);
+  }
 };
 
 const redirect = function (path) {

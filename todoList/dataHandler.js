@@ -11,24 +11,17 @@ class DataBase {
       this.data = data;
     })
   }
-  write(data,path){
-    fs.writeFile(path,JSON.stringify(data,null,2),(err)=>{
+  write(user,data){
+    this.data[user]=data;
+    fs.writeFile('data/todoList.json',JSON.stringify(this.data,null,2),(err)=>{
       if(err) console.log(err);
     });
-  }
-  writeInDatabase(user,data){
-    this.data[user]=data;
-    this.write(this.data,'data/todoList.json');
-  }
-  writeTodoList(todoList){
-    let data = todoList.join('<br>');
-    this.write(data,'public/js/data.js');
   }
   getUsers(){
     return Object.keys(this.data);
   }
   getUserData(user){
-    return this.data[user];
+    return this.data[user]||{};
   }
 }
 
