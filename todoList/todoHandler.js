@@ -24,10 +24,37 @@ class TodoHandler {
   }
   showUserTodo(){
     let titles = Object.keys(this.data).map(id=>{
-      return `<a href=\"${id}\">${this.data[id].title}</a>`;
+      return `<a href=\"todo/${this.user}/${id}\">${this.data[id].title}</a>`;
     }).join('<br>')
     fs.writeFile('./public/js/data.js',`var data = \`${titles}\``,(err)=>{
       console.log(err);
+    });
+  }
+  displayTodo(id){
+    let title = this.getTitle(id);
+    let desc = this.getDesc(id);
+    let items = this.getItems(id);
+    let itemList = items.map(item=>{
+      return `  <a href=\"${item}\">${item}</a>`;
+    }).join('<br>');
+    let data = [`Title:\\t<a href=\"${title}\">${title}</a>`,
+    `Description: \\t<a href=\"${desc}\">${desc}</a>`,`Items:<br>${itemList}`];
+    fs.writeFile('./public/js/todo.js',`var todo = \`${data.join('<br>')}\``,(err)=>{
+      console.log(err);
+    });
+  }
+  getTitle(id){
+    console.log(this.data,id);
+    return this.data[id].title;
+  }
+  getDesc(id){
+    return this.data[id].desc;
+  }
+  getItems(id){
+    let items = this.data[id].items;
+    let ids = Object.keys(items);
+    return ids.map(id=>{
+      return items[id].name;
     });
   }
 }

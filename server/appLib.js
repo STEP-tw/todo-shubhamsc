@@ -27,7 +27,7 @@ const loginUserSendToHome = function (req, res) {
 };
 
 const logoutUserSendToLogin = function (req, res) {
-  if (['/home','/items','/createTodo'].includes(req.url) && !req.user) {
+  if (['/home','/items','/createTodo','/viewTodo'].includes(req.url) && !req.user) {
     res.redirect('/login');
   }
 };
@@ -84,8 +84,13 @@ const ignorePage = function (req, res) {
 };
 
 const viewTodo = function(req,res){
-  res.write('Not yet implement');
-  res.end();
+  let user = req.cookie.userName
+  let filePath = `/todo/${user}/`;
+  if(req.url.startsWith(filePath)){
+    let id = req.url.substr(filePath.length);
+    todoHandler.displayTodo(id);
+    res.redirect('/viewTodo');
+  }
 };
 
 const addTodo = function(req,res){

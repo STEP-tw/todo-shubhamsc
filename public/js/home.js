@@ -2,9 +2,9 @@ const getTodo = function(){
   return  data || '';
 };
 
-const showTodo = function(){
+const showTodoList = function(){
   let todoList = getTodo();
   document.getElementById('todoList').innerHTML = todoList;
 }
 
-window.onload = showTodo;
+window.onload = showTodoList;
