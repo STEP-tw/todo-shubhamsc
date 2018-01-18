@@ -1,7 +1,7 @@
 const getTodo = function(){
-  let titles = Object.keys(data.todo);
-  return titles.map(function(title){
-    return `<a href="view" id="${title}">${title}</a>`
+  let todoList = Object.keys(data.todo);
+  return todoList.map(function(todo){
+    return `<a href="view" id="${todo.id}">${todo.title}</a>`
   }).join('<br>');
 };
 

@@ -1,6 +1,8 @@
 const fs = require('fs');
-const todoHandler = require('../todoList/todoHandler.js');
-todoHandler.readTodo();
+const DataHandler = require('../todoList/dataHandler.js');
+const TodoHandler = require('../todoList/todoHandler.js')
+const writeContents = require('../commonLib/lib.js').writeContents;
+new DataHandler().read();
 let registeredUsers = [{userName: 'shubham',password: 1234},{userName:"singh",password:"123"}];
 
 const loadUser = function (req, res) {
@@ -38,11 +40,10 @@ const getLogin = function (req, res) {
   fs.readFile('./public/login.html', 'utf8', (err, data) => {
     if (err){
       console.log(err);
-      res.pageNotFound();
       return;
     } 
     let loginData = data.replace(/LOGIN_ERROR/, error);
-    showContents(req, res, loginData);
+    writeContents(req, res, loginData);
   });
 };
 
@@ -66,7 +67,8 @@ const postLogin = function (req, res) {
   let sessionId = new Date().getTime();
   res.setHeader('Set-Cookie', [`sessionId=${sessionId}`, `userName=${user.userName}`]);
   user.sessionId = sessionId;
-  todoHandler.writeuserData({userName:user.userName});  
+  let todoHandler = new TodoHandler();
+  todoHandler.displayTodoList(user.userName); 
   res.redirect('/home');
 };
 
@@ -77,57 +79,6 @@ const getLogout = function (req, res) {
   res.redirect('/login')
 };
 
-
-const getTypes = function (extn) {
-  let types = {
-    html: 'text/html',
-    jpg: 'image/jpg',
-    gif: 'image/gif',
-    pdf: 'application/pdf',
-    css: 'text/css',
-    js: 'text/javascript'
-  };
-  return types[extn];
-};
-
-const showContents = function (req, res, data) {
-  let extn = req.url.split('.').pop();
-  if (extn == req.url) {
-    extn = 'html';
-  }
-  let type = getTypes(extn);
-  res.statusCode = 200;
-  res.setHeader('Content-Type', type);
-  res.write(data);
-  res.end();
-};
-
-const readFileContents = function(req,res){
-  fs.readFile(`./public${req.url}`, (err, data) => {
-    if (err) {
-      res.pageNotFound();
-      return;
-    }
-    let userName = req.cookie.userName||'';
-    data = data.toString().replace(/USER_NAME/,userName);
-    showContents(req, res, data);
-  });
-}
-
-const displayPage = function (req, res) {
-  if(req.url=='/login') return;
-  if(req.url=='/items') return;
-  let extn = req.url.split('.').pop();
-  if(extn=='html'){
-    res.pageNotFound();
-    return;
-  }
-  if (extn == req.url) {
-    req.url = `${req.url}.html`;
-  }
-  readFileContents(req,res);
-};
-
 const ignorePage = function (req, res) {
   res.end();
 };
@@ -135,7 +86,7 @@ const ignorePage = function (req, res) {
 const createTodo = function(req,res){
   let todo = req.body;
   todo.userName = req.cookie.userName;
-  todoHandler.writeTodo(todo);
+  todoHandler.create(todo);
   res.setHeader('Set-Cookie', [`title=${todo.title}`, `desc=${todo.desc}`])
   res.redirect('/items');  
 };
@@ -153,7 +104,7 @@ const getItems = function(req,res){
     let contents = data.replace(/TITLE/,title);
     contents = contents.replace(/DESC/,desc);
     contents = contents.toString().replace(/USER_NAME/,userName);    
-    showContents(req,res,contents);
+    writeContents(req,res,contents);
   })
 };
 
@@ -163,7 +114,7 @@ const addItem = function(req,res){
   todo.title = req.cookie.title;
   todo.desc = req.cookie.desc;
   todo.item = req.body.item;
-  todoHandler.writeTodo(todo);  
+  todoHandler.updateItems(todo);  
   res.end();
 }
 
@@ -174,7 +125,6 @@ exports.logoutUserSendToLogin = logoutUserSendToLogin;
 exports.getLogin = getLogin;
 exports.postLogin = postLogin;
 exports.getLogout = getLogout;
-exports.displayPage = displayPage;
 exports.ignorePage = ignorePage;
 exports.createTodo = createTodo;
 exports.viewTodo = viewTodo;

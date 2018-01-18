@@ -14,6 +14,10 @@ class UsersTodo {
   readFromFile(usersTodo){
     this.usersTodo = usersTodo;
   }
+  getUserTodoList(user){
+    let ids = Object.keys(user);
+    return ids.map((id)=>id.title);
+  }
 }
 
 module.exports = UsersTodo;

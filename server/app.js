@@ -1,9 +1,12 @@
 const lib = require('./appLib.js');
 const webApp = require('./webApp.js');
-const logRequest = require('./logRequest.js').logRequest;
 let app = webApp.create();
 
-app.use(logRequest);
+const LoggerHandler = require('../handler/logger_handler.js');
+const FileHandler = require('../handler/file_handler.js')
+app.use(new LoggerHandler().getRequestHandler());
+
+
 app.use(lib.loadUser);
 app.use(lib.checkForAlreadyLoggedIn);
 app.use(lib.loginUserSendToHome);
@@ -16,6 +19,6 @@ app.get('/items',lib.getItems);
 app.post('/addItem',lib.addItem);
 app.get('/view',lib.viewTodo);
 app.get('/favicon.ico',lib.ignorePage);
-app.postServe(lib.displayPage);
+app.postServe(new FileHandler().getRequestHandler());
 
 module.exports = app;

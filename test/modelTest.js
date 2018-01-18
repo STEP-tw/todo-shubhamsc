@@ -29,21 +29,29 @@ describe('todo item',()=>{
 
 describe('todo items',()=>{
   describe('addItems',()=>{
-    it('should add item in a items list',()=>{
+    it('should add item in a item\'s list',()=>{
       let items = new Items();
-      let expected = [{item:{name:'todoApp',done:false}}];
+      let expected = {1:{name:'todoApp',done:false}};
       items.addItems('todoApp');
       let actual = items.getItems()
       assert.deepEqual(actual,expected)
     })
-    it('should add number of item in items list',()=>{
+    it('should add number of item in item\'s list',()=>{
       let items = new Items();
-      let expected = [{item:{name:'create todo',done:false}},
-      {item:{name:'create database',done:false}},
-      {item:{name:'create model',done:false}}];
+      let expected = {1:{name:'create todo',done:false},
+      2:{name:'create database',done:false},
+      3:{name:'create model',done:false}};
       items.addItems('create todo');
       items.addItems('create database');
       items.addItems('create model');      
+      let actual = items.getItems()
+      assert.deepEqual(actual,expected)
+    })
+    it('should add item in a already exist item\'s list',()=>{
+      let items = new Items();
+      let expected = {1:{name:'add todo',done:false},2:{name:'view todo',done:false}};
+      items.getPrevItems({1:{name:'add todo',done:false}});
+      items.addItems('view todo');
       let actual = items.getItems()
       assert.deepEqual(actual,expected)
     })
@@ -66,7 +74,7 @@ describe('todoList',()=>{
   describe('add todo in List',()=>{
     it('should add todo in todo list with title',()=>{
       let todoList = new TodoList();
-      let expected = {App:{title:'App',desc:'create a todo app',items:[{item:{name:'todoApp',done:false}}],done:false}};
+      let expected = {1:{title:'App',desc:'create a todo app',items:[{item:{name:'todoApp',done:false}}],done:false}};
       todoList.createTodoList('App','create a todo app',[{item:{name:'todoApp',done:false}}]);
       let actual = todoList.getTodoList()
       assert.deepEqual(actual,expected)
@@ -75,11 +83,11 @@ describe('todoList',()=>{
   describe('add todo in current todo list',()=>{
     it('should add todo in already exist todo list with new title',()=>{
       let todoList = new TodoList();
-      let expected = {todoApp:{title:'todoApp',desc:'create a todo app',items:[{item:{name:'todoApp',done:false}}],done:false},
-      flowerApp:{title:'flowerApp',desc:'create a flower catalog app',items:[{item:{name:'image',done:false}}],done:false}};
-      todoList.addPrevTodoList({todoApp:{title:'todoApp',desc:'create a todo app',items:[{item:{name:'todoApp',done:false}}],done:false}})
-      todoList.createTodoList('flowerApp','create a flower catalog app',[{item:{name:'image',done:false}}]);
-      let actual = todoList.getTodoList()
+      let expected = {1:{title:'todoApp',desc:'create a todo app',items:{1:{name:'todoApp',done:false}},done:false},
+      2:{title:'flowerApp',desc:'create a flower catalog app',items:{1:{name:'image',done:false}},done:false}};
+      todoList.addPrevTodoList({1:{title:'todoApp',desc:'create a todo app',items:{1:{name:'todoApp',done:false}},done:false}});
+      todoList.createTodoList('flowerApp','create a flower catalog app',{1:{name:'image',done:false}});
+      let actual = todoList.getTodoList();
       assert.deepEqual(actual,expected)
     })
   })

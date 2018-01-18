@@ -4,3 +4,6 @@ node_modules/
 package-lock.json
 data/todoList.json
 public/js/data.js
+coverage/
+.nyc_output/
+todoList/foo.js
